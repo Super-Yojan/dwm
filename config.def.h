@@ -27,7 +27,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "6", "7", "8", "9" };
+static const char *tags[] = { "", "", "", "", "",  "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -47,6 +47,11 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 
 #define FORCE_VSPLIT 0  /* nrowgrid layout: force two clients to always split vertically */
 #include "vanitygaps.c"
+
+static const LayoutMonitorRule lm_rules[] = {
+	/* >=w, >=h, req'd layout, new nmaster, new mfact */
+	{ 3000, 0,   0,            2,           0.66 },
+};
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */

@@ -111,6 +111,13 @@ typedef struct {
 	void (*arrange)(Monitor *);
 } Layout;
 
+typedef struct {
+	int mw, mh;    /* >= matching */
+	int layout;    /* only apply if this is the current layout, <0 for no matching */
+	int nmaster;   /* the new nmaster to apply */
+	float mfact;   /* the new mfact to apply */
+} LayoutMonitorRule;
+
 struct Monitor {
 	char ltsymbol[16];
 	float mfact;
@@ -146,6 +153,7 @@ typedef struct {
 } Rule;
 
 /* function declarations */
+static void applylmrules(void);
 static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
 static void arrange(Monitor *m);
@@ -281,6 +289,31 @@ static Window root, wmcheckwin;
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
 /* function implementations */
+void
+applylmrules(void)
+{
+	float new_mfact = mfact;
+	int new_nmaster = nmaster;
+	size_t i;
+
+	for (i = 0; i < LENGTH(lm_rules); i++) {
+		const LayoutMonitorRule *lmr = &lm_rules[i];
+
+		if (selmon->mw >= lmr->mw &&
+		    selmon->mh >= lmr->mh &&
+		    selmon->sellt == lmr->layout)
+		{
+			new_mfact = lmr->mfact;
+			new_nmaster = lmr->nmaster;
+			break;
+		}
+	}
+
+	selmon->mfact = new_mfact;
+	selmon->nmaster = new_nmaster;
+	arrange(selmon);
+}
+
 void
 applyrules(Client *c)
 {
@@ -580,6 +613,7 @@ configurenotify(XEvent *e)
 			}
 			focus(NULL);
 			arrange(NULL);
+			applylmrules();
 		}
 	}
 }
@@ -1521,9 +1555,8 @@ setlayout(const Arg *arg)
 	if (arg && arg->v)
 		selmon->lt[selmon->sellt] = (Layout *)arg->v;
 	strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
-	if (selmon->sel)
-		arrange(selmon);
-	else
+	applylmrules();
+	if (!selmon->sel)
 		drawbar(selmon);
 }
 
@@ -1614,6 +1647,7 @@ setup(void)
 	XSelectInput(dpy, root, wa.event_mask);
 	grabkeys();
 	focus(NULL);
+	applylmrules();
 }
 
 
