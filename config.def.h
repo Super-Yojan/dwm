@@ -17,11 +17,11 @@ static const unsigned int gappov    = 10;       /* vert outer gap between window
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const char *fonts[]          = { "Comic Shanns Regular:size=12","JoyPixels:pixelsize=12" };
 static const char dmenufont[]       = "Comic Shanns Regular:size=12";
-static const char col_gray1[]       = "#3b4252";
-static const char col_gray2[]       = "#434c5e";
+static const char col_gray1[]       = "#282A30";
+static const char col_gray2[]       = "#32343C";
 static const char col_gray3[]       = "#d8dee9";
 static const char col_gray4[]       = "#e5e9f0";
-static const char col_cyan[]        = "#4c566a";
+static const char col_cyan[]        = "#464954";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
