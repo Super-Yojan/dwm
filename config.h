@@ -15,7 +15,7 @@ static const unsigned int gappiv    = 10;       /* vert inner gap between window
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
-static const char *fonts[]          = { "Comic Shanns Regular:size=12","JoyPixels:pixelsize=12" };
+static const char *fonts[]          = { "Comic Shanns Regular:size=12"};
 static const char dmenufont[]       = "Comic Shanns Regular:size=12";
 static const char col_gray1[]       = "#282A30";
 static const char col_gray2[]       = "#32343C";
@@ -84,6 +84,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
+static const char *lock[] = {"slock", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -97,6 +98,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
+    { MODKEY|Mod4Mask|ShiftMask,    XK_l,      spawn,          {.v = lock}},
+    { MODKEY|Mod4Mask|ShiftMask,    XK_x,      spawn,          SHCMD("flameshot gui")},
+    { MODKEY|Mod4Mask|ShiftMask,    XK_f,      spawn,          SHCMD("alacritty tmux-sessionizer")},
 	{ MODKEY|Mod4Mask,              XK_u,      incrgaps,       {.i = +1 } },
 	{ MODKEY|Mod4Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } },
 	{ MODKEY|Mod4Mask,              XK_i,      incrigaps,      {.i = +1 } },
