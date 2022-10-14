@@ -15,8 +15,8 @@ static const unsigned int gappiv    = 10;       /* vert inner gap between window
 static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
-static const char *fonts[]          = { "Comic Shanns Regular:size=12"};
-static const char dmenufont[]       = "Comic Shanns Regular:size=12";
+static const char *fonts[]          = { "JetBrains Mono:size=11"};
+static const char dmenufont[]       = "JetBrains Mono:size=11";
 static const char col_gray1[]       = "#282A30";
 static const char col_gray2[]       = "#32343C";
 static const char col_gray3[]       = "#d8dee9";
@@ -29,8 +29,8 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
+// static const char *tags[] = { "dev", "www", "", "4", "5", "6", "7", "dis", "spt" };
+static const char *tags[] = { "dev", "www","3", "4", "5", "6", "7" ,"","spt" };
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -39,6 +39,7 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+    // { "discord",  NULL,       NULL,       }
 };
 
 /* layout(s) */
@@ -83,7 +84,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
+static const char *termcmd[]  = { "st", NULL };
 static const char *lock[] = {"slock", NULL};
 
 static Key keys[] = {
@@ -102,7 +103,6 @@ static Key keys[] = {
     { MODKEY|Mod4Mask|ShiftMask,    XK_x,      spawn,          SHCMD("flameshot gui")},
     { MODKEY|Mod4Mask|ShiftMask,    XK_p,      spawn,          SHCMD("/home/drmoscovium/.config/eww/open.sh")},
     { MODKEY|Mod4Mask|ShiftMask,    XK_b,      spawn,          SHCMD("/home/drmoscovium/.fehbg")},
-    { MODKEY,             XK_Return, spawn,          SHCMD("emacsclient -a '' -c")},
 	{ MODKEY|Mod4Mask,              XK_u,      incrgaps,       {.i = +1 } },
 	{ MODKEY|Mod4Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } },
 	{ MODKEY|Mod4Mask,              XK_i,      incrigaps,      {.i = +1 } },
