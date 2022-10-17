@@ -36,6 +36,34 @@ static const char *colors[][3] = {
     [SchemeSel] = {col_gray4, col_cyan, col_cyan},
 };
 
+/* colours for status bar, at least one entry is needed
+ * default foreground is colours from gruvbox dark
+ * default background should be the same as bg in SchemeNorm
+ */
+static const char *sb_colours[][2] = {
+    /* fg           bg  */
+    {"#E06C75", col_gray1}, {"#E5c07b", col_gray1}, {"#C678DD", col_gray1},
+    {"#98c379", col_gray1}, {"#61AFEF", col_gray1}, {"#56B6C2", col_gray1},
+};
+/* allow colours to shift right each time drawbar() is called, useless but fun
+ */
+static unsigned int colour_shift = 0;
+/* for rounded corner: pixels between each components */
+static unsigned int r_gap = 10;
+/* for rounded corner: see github comment, tldr, try 2 or 3 */
+static unsigned int jagged_pixel = 3;
+/* for xmonad: distance between the top edge of the underline and the bottom of
+ * the sb */
+static unsigned int underline_offset = 2;
+/* for xmonad: height of the underline; so maximum value should be
+ * underline_offset */
+static unsigned int underline_height = 2;
+/* for xmonad: pixels between each components*/
+static unsigned int m_gap = 15;
+/* for xmonad: distance between the right of the screen and the most right
+ * component */
+static unsigned int right_padding = 5;
+
 /* tagging */
 // static const char *tags[] = { "dev", "www", "", "4", "5", "6", "7", "dis",
 // "spt" };
@@ -155,6 +183,9 @@ static Key keys[] = {
     {MODKEY, XK_period, focusmon, {.i = +1}},
     {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
     {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
+    {MODKEY, XK_s, sb_scroll, {0}},
+    {MODKEY | ShiftMask, XK_s, sb_shiftcolour, {0}},
+
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8){MODKEY | ShiftMask, XK_q, quit, {0}},

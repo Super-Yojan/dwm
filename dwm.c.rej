@@ -1,63 +1,52 @@
 --- dwm.c
 +++ dwm.c
-@@ -172,6 +172,7 @@ static void focusstack(const Arg *arg);
- static Atom getatomprop(Client *c, Atom prop);
- static int getrootptr(int *x, int *y);
- static long getstate(Window w);
-+static pid_t getstatusbarpid();
- static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
- static void grabbuttons(Client *c, int focused);
- static void grabkeys(void);
-@@ -445,9 +451,23 @@ buttonpress(XEvent *e)
+@@ -453,7 +464,7 @@ buttonpress(XEvent *e)
  			arg.ui = 1 << i;
- 		} else if (ev->x < x + blw)
+ 		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
  			click = ClkLtSymbol;
 -		else if (ev->x > selmon->ww - (int)TEXTW(stext))
-+		else if (ev->x > selmon->ww - statusw) {
-+			x = selmon->ww - statusw;
++		else if (ev->x > selmon->ww - status_range)
  			click = ClkStatusText;
--		else
-+			statussig = 0;
-+			for (text = s = stext; *s && x <= ev->x; s++) {
-+				if ((unsigned char)(*s) < ' ') {
-+					ch = *s;
-+					*s = '\0';
-+					x += TEXTW(text) - lrpad;
-+					*s = ch;
-+					text = s + 1;
-+					if (x >= ev->x)
-+						break;
-+					statussig = ch;
-+				}
-+			}
-+		} else
+ 		else
  			click = ClkWinTitle;
- 	} else if ((c = wintoclient(ev->window))) {
- 		focus(c);
-@@ -709,9 +729,24 @@ drawbar(Monitor *m)
+@@ -718,16 +732,27 @@ drawbar(Monitor *m)
+ 	int boxw = drw->fonts->h / 6 + 2;
+ 	unsigned int i, occ = 0, urg = 0;
+ 	Client *c;
++	drw_funcs statusbar[3] = {sb_roundcorner, sb_powerline, sb_xmonad};
++	int n = -1, index = 0;
++	const char *delim = ",";
++	/* assuming maximum of 20 'components' in the status bar */
++	const char *info[20];
++	char scopy[256];
+ 
+ 	if (!m->showbar)
+ 		return;
  
  	/* draw status first so it can be overdrawn by tags later */
  	if (m == selmon) { /* status is only drawn on selected monitor */
-+		char *text, *s, ch;
- 		drw_setscheme(drw, scheme[SchemeNorm]);
+-		drw_setscheme(drw, scheme[SchemeNorm]);
 -		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
 -		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
-+
-+		x = 0;
-+		for (text = s = stext; *s; s++) {
-+			if ((unsigned char)(*s) < ' ') {
-+				ch = *s;
-+				*s = '\0';
-+				tw = TEXTW(text) - lrpad;
-+				drw_text(drw, m->ww - statusw + x, 0, tw, bh, 0, text, 0);
-+				x += tw;
-+				*s = ch;
-+				text = s + 1;
-+			}
++		strcpy(scopy, stext);
++		char *token = strtok(scopy, delim);
++		while (token) {
++			info[++n] = token;
++			token = strtok(NULL, delim);
 +		}
-+		tw = TEXTW(text) - lrpad + 2;
-+		drw_text(drw, m->ww - statusw + x, 0, tw, bh, 0, text, 0);
-+		tw = statusw;
++		statusbar[which_sb % LENGTH(statusbar)](m->ww, &tw, n, index, info);
  	}
++	status_range = tw;
  
  	for (c = m->clients; c; c = c->next) {
+ 		occ |= c->tags;
+@@ -1695,6 +1830,9 @@ setup(void)
+ 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
+ 	for (i = 0; i < LENGTH(colors); i++)
+ 		scheme[i] = drw_scm_create(drw, colors[i], 3);
++	sb_scheme = ecalloc(LENGTH(sb_colours), sizeof(Clr *));
++	for (i = 0; i < LENGTH(sb_colours); i++)
++		sb_scheme[i] = drw_scm_create(drw, sb_colours[i], 2);
+ 	/* init bars */
+ 	updatebars();
+ 	updatestatus();
