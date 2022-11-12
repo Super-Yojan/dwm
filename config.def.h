@@ -67,7 +67,7 @@ static unsigned int right_padding = 5;
 /* tagging */
 // static const char *tags[] = { "dev", "www", "", "4", "5", "6", "7", "dis",
 // "spt" };
-static const char *tags[] = {"dev", "www", "note", "4",  "5",
+static const char *tags[] = {"dev", "www", "note", "4",  "VM",
                              "6",   "7",   "dis",  "spt"};
 static const Rule rules[] = {
     /* xprop(1):
