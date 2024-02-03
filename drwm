@@ -1,0 +1,9 @@
+#!/bin/bash
+
+/usr/share/drwm/background/fehbg &
+export _JAVA_AWT_WM_NONREPARENTING=1
+exec pasystray &
+exec nm-applet &
+exec picom &
+exec usr/share/drwm/drwm-bar/dwm_bar.sh &
+exec dwm

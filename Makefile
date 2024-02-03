@@ -36,10 +36,18 @@ dist: clean
 	gzip dwm-${VERSION}.tar
 	rm -rf dwm-${VERSION}
 
-install: all
-	mkdir -p ${DESTDIR}${PREFIX}/bin
-	cp -f dwm ${DESTDIR}${PREFIX}/bin
-	chmod 755 ${DESTDIR}${PREFIX}/bin/dwm
+
+deps: 
+	mkdir -p /usr/share/drwm/backgrounds/
+	cp -f wal.jpeg /usr/share/drwm/backgrounds/
+	cp -f bg /usr/share/drwm/
+	git clone https://github.com/Super-Yojan/bar /usr/share/drwm/drwm-bar
+
+install: all deps
+	cp -f drwm /usr/bin
+	chmod 755 /usr/bin/drwm
+	cp -f dwm /usr/bin
+	chmod 755 /usr/bin/dwm
 	mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	sed "s/VERSION/${VERSION}/g" < dwm.1 > ${DESTDIR}${MANPREFIX}/man1/dwm.1
 	chmod 644 ${DESTDIR}${MANPREFIX}/man1/dwm.1
