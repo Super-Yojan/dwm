@@ -34,13 +34,12 @@ dist: clean
 		dwm.1 drw.h util.h ${SRC} dwm.png transient.c dwm-${VERSION}
 	tar -cf dwm-${VERSION}.tar dwm-${VERSION}
 	gzip dwm-${VERSION}.tar
-	rm -rf dwm-${VERSION}
-
 
 deps: 
 	mkdir -p /usr/share/drwm/backgrounds/
 	cp -f wal.jpeg /usr/share/drwm/backgrounds/
 	cp -f bg /usr/share/drwm/
+	cp -f drwm.desktop /usr/share/xsessions/drwm.desktop
 	git clone https://github.com/Super-Yojan/bar /usr/share/drwm/drwm-bar
 
 install: all deps
@@ -55,5 +54,10 @@ install: all deps
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/dwm\
 		${DESTDIR}${MANPREFIX}/man1/dwm.1
+	rm -rf dwm-${VERSION}
+	rm -rf /usr/bin/drwm
+	rm -rf /usr/share/drwm
+
+
 
 .PHONY: all options clean dist install uninstall

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/usr/share/drwm/background/fehbg &
+/usr/share/drwm/bg &
 export _JAVA_AWT_WM_NONREPARENTING=1
 exec pasystray &
 exec nm-applet &
